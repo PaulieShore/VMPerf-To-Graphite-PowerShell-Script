@@ -59,13 +59,6 @@ param(
     [string[]]$Datacenter = "*",
 	# Specifies the VMWare Clusters you want to receive data from. Default is to read all Clusters managed by VCenter server or, if -Datacenter is specified, all Clusters in this Datacenter.
     [string[]]$Cluster = "*",
-	# Specifies the interval seconds for CPU Ready Summation to CPU R% Ready calculation.Default is Realtime (20s)
-	# Realtime: 20 seconds
-	# Past Day: 5 minutes (300 seconds)
-	# Past Week: 30 minutes (1800 seconds)
-	# Past Month: 2 hours (7200 seconds)
-	# Past Year: 1 day (86400 seconds)
-    [string[]]$IntervalSeconds = "20",
 	# Specifies one or more (separated by comma) IP addresses or the DNS names of the Graphite servers to which you want to connect.
 	# You can also add the Portnumber to each Server like "grafana.acme.com:2003"
 	[string[]]$Graphiteserver = "your_default_grafana_server",
@@ -482,7 +475,7 @@ if ($FromLastPoll -ne "") {
 	    	    $totaliops = $stat.ReadIOPS + $stat.WriteIOPS
 	    	    $totalkbps = $stat.ReadKBps + $stat.WriteKBps
 				
-				$cpuready = cpu_ready($stat.CPUReadySummation, $IntervalSeconds)
+				$cpuready = cpu_ready $stat.CPUReadySummation 20
 	    
 	    	    $result = $prefix + $vm + ".ReadIOPS " + [int]$stat.ReadIOPS + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
