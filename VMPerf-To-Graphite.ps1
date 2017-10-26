@@ -33,6 +33,16 @@ Script Version 1.5.2 (2016-11-30)
 https://github.com/mothe-at/VMPerf-To-Graphite-PowerShell-Script
 http://rettl.org/scripts/
 http://creativecommons.org/licenses/by-nc-sa/4.0/
+
+=================================================================
+
+Fork by PaulieShore
+Changelog (2017-Oct-26)
+- Added param $IntervalSeconds for CPU Ready calculations.
+- Added cpu_ready function for CPU Ready Summation to CPU % Ready calculation.
+- Added metric cpu.ready.summation.
+- Added metric mem.usage.average.
+
 #>
 [CmdletBinding()]
 param(
@@ -49,6 +59,13 @@ param(
     [string[]]$Datacenter = "*",
 	# Specifies the VMWare Clusters you want to receive data from. Default is to read all Clusters managed by VCenter server or, if -Datacenter is specified, all Clusters in this Datacenter.
     [string[]]$Cluster = "*",
+	# Specifies the interval seconds for CPU Ready Summation to CPU R% Ready calculation.Default is Realtime (20s)
+	# Realtime: 20 seconds
+	# Past Day: 5 minutes (300 seconds)
+	# Past Week: 30 minutes (1800 seconds)
+	# Past Month: 2 hours (7200 seconds)
+	# Past Year: 1 day (86400 seconds)
+    [string[]]$IntervalSeconds = "20",
 	# Specifies one or more (separated by comma) IP addresses or the DNS names of the Graphite servers to which you want to connect.
 	# You can also add the Portnumber to each Server like "grafana.acme.com:2003"
 	[string[]]$Graphiteserver = "your_default_grafana_server",
@@ -252,6 +269,14 @@ function weighted_average($acount,$avalues) {
     return( $wa )
 }
 
+# -------------------------------------------------------------------------------------
+# Calculate the CPU % Ready
+# -------------------------------------------------------------------------------------
+function cpu_ready($cpuready,$intsec) {
+    $cpureadycalculated = (($cpuready / ($intsec * 1000)) * 100)
+    return($cpureadycalculated)
+}
+
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # -- MAIN PROCEDURE -----------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -332,7 +357,9 @@ $metrics =	"datastore.numberreadaveraged.average",
 			"datastore.read.average",
 			"datastore.totalreadlatency.average",
 			"datastore.totalwritelatency.average",
-			"cpu.usage.average"
+			"cpu.usage.average",
+			"mem.usage.average",
+			"cpu.ready.summation"
 
 $iteration = 1
 
@@ -419,6 +446,12 @@ if ($FromLastPoll -ne "") {
 	        	    CPU = $_.Group | where {$_.MetricId -eq "cpu.usage.average"} |
 	        	    	Measure-Object -Property Value -Average |
 	        	    	select -ExpandProperty Average
+	        	    Memory = $_.Group | where {$_.MetricId -eq "mem.usage.average"} |
+	        	    	Measure-Object -Property Value -Average |
+	        	    	select -ExpandProperty Average
+					CPUReadySummation = $_.Group | where {$_.MetricId -eq "cpu.ready.summation"} |
+	        	    	Measure-Object -Property Value -Average |
+	        	    	select -ExpandProperty Average
 	        	    }
 	            }
 
@@ -448,6 +481,8 @@ if ($FromLastPoll -ne "") {
 
 	    	    $totaliops = $stat.ReadIOPS + $stat.WriteIOPS
 	    	    $totalkbps = $stat.ReadKBps + $stat.WriteKBps
+				
+				$cpuready = cpu_ready($stat.CPUReadySummation, $IntervalSeconds)
 	    
 	    	    $result = $prefix + $vm + ".ReadIOPS " + [int]$stat.ReadIOPS + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
@@ -467,7 +502,10 @@ if ($FromLastPoll -ne "") {
 	    	    $results.add($results.count, $result)
 	    	    $result = $prefix + $vm + ".CPU " + [int]$stat.CPU + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
-                
+	    	    $result = $prefix + $vm + ".Memory " + [int]$stat.Memory + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
+	    	    $results.add($results.count, $result)
+	    	    $result = $prefix + $vm + ".CPUReady " + $cpuready + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
+	    	    $results.add($results.count, $result)
                 }
             }
 	    }
