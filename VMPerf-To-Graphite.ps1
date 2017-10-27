@@ -352,7 +352,8 @@ $metrics =	"datastore.numberreadaveraged.average",
 			"datastore.totalwritelatency.average",
 			"cpu.usage.average",
 			"mem.usage.average",
-			"cpu.ready.summation"
+			"cpu.ready.summation",
+			"net.usage.average"
 
 $iteration = 1
 
@@ -445,6 +446,9 @@ if ($FromLastPoll -ne "") {
 					CPUReadySummation = $_.Group | where {$_.MetricId -eq "cpu.ready.summation"} |
 	        	    	Measure-Object -Property Value -Average |
 	        	    	select -ExpandProperty Average
+	        	    Network = $_.Group | where {$_.MetricId -eq "net.usage.average"} |
+	        	    	Measure-Object -Property Value -Average |
+	        	    	select -ExpandProperty Average
 	        	    }
 	            }
 
@@ -498,6 +502,8 @@ if ($FromLastPoll -ne "") {
 	    	    $result = $prefix + $vm + ".Memory " + [int]$stat.Memory + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
 	    	    $result = $prefix + $vm + ".CPUReady " + $cpuready + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
+	    	    $results.add($results.count, $result)
+	    	    $result = $prefix + $vm + ".Network " + [int]$stat.Network + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
                 }
             }
