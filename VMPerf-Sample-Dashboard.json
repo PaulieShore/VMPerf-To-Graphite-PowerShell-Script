@@ -1,20 +1,55 @@
 {
-  "title": "VMPerf Virtual Machines",
-  "originalTitle": "VMPerf Virtual Machines",
-  "tags": [
-    "MatthiasR",
-    "VMPerf"
+  "__inputs": [
+    {
+      "name": "DS_GRAPHITE",
+      "label": "graphite",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "graphite",
+      "pluginName": "Graphite"
+    }
   ],
-  "style": "dark",
-  "timezone": "browser",
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "4.4.3"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "graphite",
+      "name": "Graphite",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": []
+  },
+  "description": "Metrics pulled form vCenter using VMPerf-To-Graphite.ps1 script.",
   "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
   "hideControls": false,
-  "sharedCrosshair": true,
+  "id": null,
+  "links": [],
+  "refresh": "10s",
   "rows": [
     {
-      "collapse": true,
-      "editable": true,
-      "height": "350px",
+      "collapse": false,
+      "height": 310,
       "panels": [
         {
           "columns": [
@@ -23,12 +58,9 @@
               "value": "current"
             }
           ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "height": "200",
-          "id": 29,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 32,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -40,34 +72,37 @@
           "span": 2,
           "styles": [
             {
+              "alias": "Time",
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
               "pattern": "Time",
               "type": "date"
             },
             {
+              "alias": "",
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
-              "decimals": 0,
+              "decimals": 2,
               "pattern": "/.*/",
               "thresholds": [
-                "1000",
-                "2000"
+                "0.31",
+                "0.51"
               ],
               "type": "number",
-              "unit": "short"
+              "unit": "percent"
             }
           ],
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.CPUReady, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "title": "Current IOPS",
+          "title": "Current CPU % Ready",
           "transform": "timeseries_aggregations",
           "type": "table"
         },
@@ -78,12 +113,12 @@
               "value": "current"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "height": "200",
-          "id": 30,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 3,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -102,64 +137,9 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
-              ],
-              "decimals": 0,
-              "pattern": "/.*/",
-              "thresholds": [
-                "10000",
-                "20000"
-              ],
-              "type": "number",
-              "unit": "KBs"
-            }
-          ],
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)"
-            }
-          ],
-          "title": "Current Throughput",
-          "transform": "timeseries_aggregations",
-          "type": "table"
-        },
-        {
-          "columns": [
-            {
-              "text": "Current",
-              "value": "current"
-            }
-          ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "height": "200",
-          "id": 31,
-          "isNew": true,
-          "links": [],
-          "pageSize": null,
-          "scroll": false,
-          "showHeader": true,
-          "sort": {
-            "col": 1,
-            "desc": true
-          },
-          "span": 2,
-          "styles": [
-            {
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "Time",
-              "type": "date"
-            },
-            {
-              "colorMode": "row",
-              "colors": [
-                "rgba(50, 172, 45, 0.78)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
               "decimals": 0,
               "pattern": "/.*/",
@@ -174,10 +154,67 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.CPU, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.CPU, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Current CPU",
+          "transform": "timeseries_aggregations",
+          "transparent": false,
+          "type": "table"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "fontSize": "80%",
+          "height": "180",
+          "id": 31,
+          "links": [],
+          "pageSize": null,
+          "scroll": false,
+          "showHeader": true,
+          "sort": {
+            "col": 1,
+            "desc": true
+          },
+          "span": 2,
+          "styles": [
+            {
+              "alias": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "colorMode": "row",
+              "colors": [
+                "rgba(50, 172, 45, 0.97)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(245, 54, 54, 0.9)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "60",
+                "80"
+              ],
+              "type": "number",
+              "unit": "percent"
+            }
+          ],
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.Memory, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "title": "Current Memory",
           "transform": "timeseries_aggregations",
           "type": "table"
         },
@@ -188,12 +225,12 @@
               "value": "current"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "height": "200",
-          "id": 32,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 1,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -202,7 +239,7 @@
             "col": 1,
             "desc": true
           },
-          "span": 3,
+          "span": 2,
           "styles": [
             {
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -212,28 +249,30 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
-              "decimals": 1,
+              "decimals": 0,
               "pattern": "/.*/",
               "thresholds": [
-                "15",
-                "30"
+                "1000",
+                "2000"
               ],
               "type": "number",
-              "unit": "ms"
+              "unit": "KBs"
             }
           ],
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.Network, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "title": "Current Read Latency",
+          "title": "Current Network",
           "transform": "timeseries_aggregations",
+          "transparent": false,
           "type": "table"
         },
         {
@@ -243,12 +282,12 @@
               "value": "current"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "height": "200",
-          "id": 33,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 4,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -257,19 +296,19 @@
             "col": 1,
             "desc": true
           },
-          "span": 3,
+          "span": 2,
           "styles": [
             {
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "VM",
-              "type": "string"
+              "pattern": "Time",
+              "type": "date"
             },
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
               "decimals": 1,
               "pattern": "/.*/",
@@ -284,35 +323,89 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "title": "Current Read Latency",
+          "transform": "timeseries_aggregations",
+          "transparent": false,
+          "type": "table"
+        },
+        {
+          "columns": [
+            {
+              "text": "Current",
+              "value": "current"
+            }
+          ],
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 5,
+          "links": [],
+          "pageSize": null,
+          "scroll": false,
+          "showHeader": true,
+          "sort": {
+            "col": 1,
+            "desc": true
+          },
+          "span": 2,
+          "styles": [
+            {
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "VM",
+              "type": "string"
+            },
+            {
+              "colorMode": "row",
+              "colors": [
+                "rgba(50, 172, 45, 0.97)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(245, 54, 54, 0.9)"
+              ],
+              "decimals": 1,
+              "pattern": "/.*/",
+              "thresholds": [
+                "15",
+                "30"
+              ],
+              "type": "number",
+              "unit": "ms"
+            }
+          ],
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Current Write Latency",
           "transform": "timeseries_aggregations",
+          "transparent": false,
           "type": "table"
         },
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "editable": true,
-          "error": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 2,
           "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 24,
+          "height": "306",
+          "id": 34,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "current",
             "sortDesc": true,
@@ -328,188 +421,46 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 4,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.CPUReady, $TopResources), 2)",
+              "textEditor": true
             }
           ],
+          "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "TOP $TopResources VM Current IOPS",
+          "title": "TOP $TopResources VM Current CPU % Ready",
           "tooltip": {
-            "msResolution": false,
             "shared": true,
-            "value_type": "cumulative"
+            "sort": 0,
+            "value_type": "individual"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": null,
-          "decimals": 0,
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 25,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "max": true,
-            "min": false,
-            "rightSide": false,
+            "buckets": null,
+            "mode": "time",
+            "name": null,
             "show": true,
-            "sort": "current",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 4,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "TOP $TopResources VM Current Throughput",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "kbytes",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": null,
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 26,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "max": true,
-            "min": false,
-            "rightSide": false,
-            "show": true,
-            "sort": "current",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 4,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.CPU, $TopResources), 2)"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "TOP $TopResources VM Current CPU",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
+            "values": []
           },
           "yaxes": [
             {
               "format": "percent",
+              "label": null,
               "logBase": 1,
-              "max": 100,
+              "max": null,
               "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -520,35 +471,29 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": 1,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "threshold1": 20,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": 50,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
-          },
-          "height": "",
-          "id": 27,
+          "grid": {},
+          "height": "306",
+          "id": 8,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
-            "sort": "max",
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -556,30 +501,457 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.CPU, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Current CPU",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "transparent": false,
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "fill": 1,
+          "height": "306",
+          "id": 33,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.Memory, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Current Memory",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 0,
+          "fill": 1,
+          "height": "306",
+          "id": 35,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.Network, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Current Network",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "KBs",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 7,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Current Throughput",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "transparent": false,
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "kbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 6,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Current IOPS",
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "transparent": false,
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "none",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 9,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(216, 200, 27, 0.27)",
+              "op": "gt",
+              "value": 20
+            },
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(234, 112, 112, 0.22)",
+              "op": "gt",
+              "value": 50
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "TOP $TopResources VM Current Read Latencies",
           "tooltip": {
-            "msResolution": false,
+            "msResolution": true,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "ms",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -587,6 +959,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -597,27 +970,21 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": null,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "threshold1": 20,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": 50,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
-          },
-          "height": "",
-          "id": 28,
+          "grid": {},
+          "height": "306",
+          "id": 10,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "current",
             "sortDesc": true,
@@ -625,7 +992,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -633,31 +1000,54 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestCurrent(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(216, 200, 27, 0.27)",
+              "op": "gt",
+              "value": 20
+            },
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(234, 112, 112, 0.22)",
+              "op": "gt",
+              "value": 50
             }
           ],
           "timeFrom": null,
           "timeShift": null,
           "title": "TOP $TopResources VM Current Write Latencies",
           "tooltip": {
-            "msResolution": false,
+            "msResolution": true,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
-          "transparent": false,
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "ms",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -665,6 +1055,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -673,13 +1064,16 @@
           ]
         }
       ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
       "showTitle": true,
-      "title": "Virtual Machines by Current Values"
+      "title": "Virtual machines by current values",
+      "titleSize": "h6"
     },
     {
-      "collapse": true,
-      "editable": true,
-      "height": "350px",
+      "collapse": false,
+      "height": 291,
       "panels": [
         {
           "columns": [
@@ -688,11 +1082,9 @@
               "value": "max"
             }
           ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "id": 29,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 36,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -704,37 +1096,39 @@
           "span": 2,
           "styles": [
             {
+              "alias": "Time",
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
               "pattern": "Time",
               "type": "date"
             },
             {
+              "alias": "",
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
-              "decimals": 0,
+              "decimals": 2,
               "pattern": "/.*/",
               "thresholds": [
-                "1000",
-                "2000"
+                "0.31",
+                "0.51"
               ],
               "type": "number",
-              "unit": "short"
+              "unit": "percent"
             }
           ],
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.CPUReady, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "title": "Maximum IOPS",
+          "title": "Maximum CPU % Ready",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "type": "table"
         },
         {
           "columns": [
@@ -743,11 +1137,12 @@
               "value": "max"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "id": 30,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 13,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -766,64 +1161,9 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
-              ],
-              "decimals": 0,
-              "pattern": "/.*/",
-              "thresholds": [
-                "10000",
-                "20000"
-              ],
-              "type": "number",
-              "unit": "KBs"
-            }
-          ],
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)"
-            }
-          ],
-          "title": "Maximum Throughput",
-          "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
-        },
-        {
-          "columns": [
-            {
-              "text": "Max",
-              "value": "max"
-            }
-          ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "id": 31,
-          "isNew": true,
-          "links": [],
-          "pageSize": null,
-          "scroll": false,
-          "showHeader": true,
-          "sort": {
-            "col": 1,
-            "desc": true
-          },
-          "span": 2,
-          "styles": [
-            {
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "Time",
-              "type": "date"
-            },
-            {
-              "colorMode": "row",
-              "colors": [
-                "rgba(50, 172, 45, 0.78)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
               "decimals": 0,
               "pattern": "/.*/",
@@ -838,13 +1178,13 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.CPU, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.CPU, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Maximum CPU",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "type": "table"
         },
         {
           "columns": [
@@ -853,11 +1193,9 @@
               "value": "max"
             }
           ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "id": 32,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 37,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -866,7 +1204,65 @@
             "col": 1,
             "desc": true
           },
-          "span": 3,
+          "span": 2,
+          "styles": [
+            {
+              "alias": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "colorMode": "row",
+              "colors": [
+                "rgba(50, 172, 45, 0.97)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(245, 54, 54, 0.9)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "60",
+                "80"
+              ],
+              "type": "number",
+              "unit": "percent"
+            }
+          ],
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.Memory, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "title": "Maximum Memory",
+          "transform": "timeseries_aggregations",
+          "type": "table"
+        },
+        {
+          "columns": [
+            {
+              "text": "Max",
+              "value": "max"
+            }
+          ],
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 38,
+          "links": [],
+          "pageSize": null,
+          "scroll": false,
+          "showHeader": true,
+          "sort": {
+            "col": 1,
+            "desc": true
+          },
+          "span": 2,
           "styles": [
             {
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -876,11 +1272,68 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
-              "decimals": 1,
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "1000",
+                "2000"
+              ],
+              "type": "number",
+              "unit": "KBs"
+            }
+          ],
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.Network, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "title": "Maximum Network",
+          "transform": "timeseries_aggregations",
+          "transparent": false,
+          "type": "table"
+        },
+        {
+          "columns": [
+            {
+              "text": "Max",
+              "value": "max"
+            }
+          ],
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 14,
+          "links": [],
+          "pageSize": null,
+          "scroll": false,
+          "showHeader": true,
+          "sort": {
+            "col": 1,
+            "desc": true
+          },
+          "span": 2,
+          "styles": [
+            {
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "colorMode": "row",
+              "colors": [
+                "rgba(50, 172, 45, 0.97)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(245, 54, 54, 0.9)"
+              ],
+              "decimals": 0,
               "pattern": "/.*/",
               "thresholds": [
                 "15",
@@ -893,13 +1346,13 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Maximum Read Latency",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "type": "table"
         },
         {
           "columns": [
@@ -908,11 +1361,12 @@
               "value": "max"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "id": 33,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 15,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -921,7 +1375,7 @@
             "col": 1,
             "desc": true
           },
-          "span": 3,
+          "span": 2,
           "styles": [
             {
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -931,9 +1385,9 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
               "decimals": 1,
               "pattern": "/.*/",
@@ -948,36 +1402,30 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Maximum Write Latency",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "type": "table"
         },
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "editable": true,
-          "error": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 2,
           "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 24,
+          "height": "306",
+          "id": 39,
           "legend": {
             "alignAsTable": true,
             "avg": true,
-            "current": true,
+            "current": false,
             "max": true,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "max",
             "sortDesc": true,
@@ -993,30 +1441,38 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 4,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.CPUReady, $TopResources), 2)",
+              "textEditor": true
             }
           ],
+          "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "TOP $TopResources VM Maximum IOPS",
+          "title": "TOP $TopResources VM Maximum CPU % Ready",
           "tooltip": {
-            "msResolution": false,
             "shared": true,
-            "value_type": "cumulative"
+            "sort": 0,
+            "value_type": "individual"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "percent",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1024,6 +1480,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1034,26 +1491,21 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": 0,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 25,
+          "grid": {},
+          "height": "306",
+          "id": 18,
           "legend": {
             "alignAsTable": true,
             "avg": true,
-            "current": true,
+            "current": false,
             "max": true,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "max",
             "sortDesc": true,
@@ -1069,112 +1521,47 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 4,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.CPU, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "TOP $TopResources VM Maximum Throughput",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "kbytes",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": null,
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 26,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "max": true,
-            "min": false,
-            "rightSide": false,
-            "show": true,
-            "sort": "max",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 4,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.CPU, $TopResources), 2)"
-            }
-          ],
+          "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
           "title": "TOP $TopResources VM Maximum CPU",
           "tooltip": {
             "msResolution": false,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "percent",
+              "label": null,
               "logBase": 1,
-              "max": 100,
+              "max": null,
               "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1185,27 +1572,18 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": 1,
-          "editable": true,
-          "error": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "fill": 1,
-          "grid": {
-            "threshold1": 20,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": 50,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
-          },
-          "height": "",
-          "id": 27,
+          "height": "306",
+          "id": 40,
           "legend": {
             "alignAsTable": true,
             "avg": true,
-            "current": true,
+            "current": false,
             "max": true,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "max",
             "sortDesc": true,
@@ -1213,7 +1591,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -1221,13 +1599,354 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.Memory, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Maximum Memory",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 0,
+          "fill": 1,
+          "height": "306",
+          "id": 41,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": true,
+            "min": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.Network, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Maximum Network",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "KBs",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 17,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Maximum Throughput",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "kbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 16,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Maximum IOPS",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 1,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 19,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(216, 200, 27, 0.27)",
+              "op": "gt",
+              "value": 20
+            },
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(234, 112, 112, 0.22)",
+              "op": "gt",
+              "value": 50
             }
           ],
           "timeFrom": null,
@@ -1236,15 +1955,21 @@
           "tooltip": {
             "msResolution": false,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "ms",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1252,6 +1977,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1262,27 +1988,21 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": null,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "threshold1": 20,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": 50,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
-          },
-          "height": "",
-          "id": 28,
+          "grid": {},
+          "height": "306",
+          "id": 20,
           "legend": {
             "alignAsTable": true,
             "avg": true,
-            "current": true,
+            "current": false,
             "max": true,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "max",
             "sortDesc": true,
@@ -1290,7 +2010,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -1298,13 +2018,31 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestMax(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(216, 200, 27, 0.27)",
+              "op": "gt",
+              "value": 20
+            },
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(234, 112, 112, 0.22)",
+              "op": "gt",
+              "value": 50
             }
           ],
           "timeFrom": null,
@@ -1313,16 +2051,21 @@
           "tooltip": {
             "msResolution": false,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
-          "transparent": false,
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "ms",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1330,6 +2073,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1338,26 +2082,27 @@
           ]
         }
       ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
       "showTitle": true,
-      "title": "Virtual Machines by Maximum Values"
+      "title": "Virtual Machines by Maximum Values",
+      "titleSize": "h6"
     },
     {
-      "collapse": true,
-      "editable": true,
-      "height": "350px",
+      "collapse": false,
+      "height": -401,
       "panels": [
         {
           "columns": [
             {
-              "text": "Average",
+              "text": "Avg",
               "value": "avg"
             }
           ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "id": 29,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 42,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -1369,50 +2114,53 @@
           "span": 2,
           "styles": [
             {
+              "alias": "Time",
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
               "pattern": "Time",
               "type": "date"
             },
             {
+              "alias": "",
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
-              "decimals": 0,
+              "decimals": 2,
               "pattern": "/.*/",
               "thresholds": [
-                "1000",
-                "2000"
+                "0.31",
+                "0.51"
               ],
               "type": "number",
-              "unit": "short"
+              "unit": "percent"
             }
           ],
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.CPUReady, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "title": "Average IOPS",
+          "title": "Average CPU % Ready",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "type": "table"
         },
         {
           "columns": [
             {
-              "text": "Average",
+              "text": "Avg",
               "value": "avg"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "id": 30,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 23,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -1431,64 +2179,9 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
-              ],
-              "decimals": 0,
-              "pattern": "/.*/",
-              "thresholds": [
-                "10000",
-                "20000"
-              ],
-              "type": "number",
-              "unit": "KBs"
-            }
-          ],
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)"
-            }
-          ],
-          "title": "Average Throughput",
-          "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
-        },
-        {
-          "columns": [
-            {
-              "text": "Average",
-              "value": "avg"
-            }
-          ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "id": 31,
-          "isNew": true,
-          "links": [],
-          "pageSize": null,
-          "scroll": false,
-          "showHeader": true,
-          "sort": {
-            "col": 1,
-            "desc": true
-          },
-          "span": 2,
-          "styles": [
-            {
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "Time",
-              "type": "date"
-            },
-            {
-              "colorMode": "row",
-              "colors": [
-                "rgba(50, 172, 45, 0.78)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
               "decimals": 0,
               "pattern": "/.*/",
@@ -1503,26 +2196,25 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.CPU, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.CPU, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Average CPU",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "transparent": false,
+          "type": "table"
         },
         {
           "columns": [
             {
-              "text": "Average",
+              "text": "Avg",
               "value": "avg"
             }
           ],
-          "editable": true,
-          "error": false,
-          "fontSize": "90%",
-          "id": 32,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 43,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -1531,7 +2223,65 @@
             "col": 1,
             "desc": true
           },
-          "span": 3,
+          "span": 2,
+          "styles": [
+            {
+              "alias": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "alias": "",
+              "colorMode": "row",
+              "colors": [
+                "rgba(50, 172, 45, 0.97)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(245, 54, 54, 0.9)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "thresholds": [
+                "60",
+                "80"
+              ],
+              "type": "number",
+              "unit": "percent"
+            }
+          ],
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.Memory, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "title": "Average Memory",
+          "transform": "timeseries_aggregations",
+          "type": "table"
+        },
+        {
+          "columns": [
+            {
+              "text": "Avg",
+              "value": "avg"
+            }
+          ],
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 44,
+          "links": [],
+          "pageSize": null,
+          "scroll": false,
+          "showHeader": true,
+          "sort": {
+            "col": 1,
+            "desc": true
+          },
+          "span": 2,
           "styles": [
             {
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -1541,43 +2291,45 @@
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
-              "decimals": 1,
+              "decimals": 0,
               "pattern": "/.*/",
               "thresholds": [
-                "15",
-                "30"
+                "1000",
+                "2000"
               ],
               "type": "number",
-              "unit": "ms"
+              "unit": "KBs"
             }
           ],
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.Network, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "title": "Average Read Latency",
+          "title": "Average Network",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "transparent": false,
+          "type": "table"
         },
         {
           "columns": [
             {
-              "text": "Average",
+              "text": "Avg",
               "value": "avg"
             }
           ],
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
-          "fontSize": "90%",
-          "id": 33,
-          "isNew": true,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 24,
           "links": [],
           "pageSize": null,
           "scroll": false,
@@ -1586,19 +2338,19 @@
             "col": 1,
             "desc": true
           },
-          "span": 3,
+          "span": 2,
           "styles": [
             {
               "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "VM",
-              "type": "string"
+              "pattern": "Time",
+              "type": "date"
             },
             {
               "colorMode": "row",
               "colors": [
-                "rgba(50, 172, 45, 0.78)",
+                "rgba(50, 172, 45, 0.97)",
                 "rgba(237, 129, 40, 0.89)",
-                "rgba(245, 54, 54, 0.49)"
+                "rgba(245, 54, 54, 0.9)"
               ],
               "decimals": 1,
               "pattern": "/.*/",
@@ -1613,36 +2365,88 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "title": "Average Read Latency",
+          "transform": "timeseries_aggregations",
+          "transparent": false,
+          "type": "table"
+        },
+        {
+          "columns": [
+            {
+              "text": "Avg",
+              "value": "avg"
+            }
+          ],
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fontSize": "80%",
+          "height": "180",
+          "id": 25,
+          "links": [],
+          "pageSize": null,
+          "scroll": false,
+          "showHeader": true,
+          "sort": {
+            "col": 1,
+            "desc": true
+          },
+          "span": 2,
+          "styles": [
+            {
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "colorMode": "row",
+              "colors": [
+                "rgba(50, 172, 45, 0.97)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(245, 54, 54, 0.9)"
+              ],
+              "decimals": 1,
+              "pattern": "/.*/",
+              "thresholds": [
+                "15",
+                "30"
+              ],
+              "type": "number",
+              "unit": "ms"
+            }
+          ],
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)",
+              "textEditor": true
             }
           ],
           "title": "Average Write Latency",
           "transform": "timeseries_aggregations",
-          "type": "table",
-          "height": "200"
+          "transparent": false,
+          "type": "table"
         },
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "editable": true,
-          "error": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 2,
           "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 24,
+          "height": "306",
+          "id": 45,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "avg",
             "sortDesc": true,
@@ -1658,30 +2462,38 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 4,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.CPUReady, $TopResources), 2)",
+              "textEditor": true
             }
           ],
+          "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "TOP $TopResources VM Average IOPS",
+          "title": "TOP $TopResources VM Average CPU % Ready",
           "tooltip": {
-            "msResolution": false,
             "shared": true,
-            "value_type": "cumulative"
+            "sort": 0,
+            "value_type": "individual"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "percent",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1689,6 +2501,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1699,26 +2512,21 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": 0,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 25,
+          "grid": {},
+          "height": "306",
+          "id": 28,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "avg",
             "sortDesc": true,
@@ -1734,112 +2542,47 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 4,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.CPU, $TopResources), 2)",
+              "textEditor": true
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "TOP $TopResources VM Average Throughput",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "kbytes",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": null,
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "",
-          "id": 26,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "max": true,
-            "min": false,
-            "rightSide": false,
-            "show": true,
-            "sort": "avg",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 4,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.CPU, $TopResources), 2)"
-            }
-          ],
+          "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
           "title": "TOP $TopResources VM Average CPU",
           "tooltip": {
             "msResolution": false,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "percent",
+              "label": null,
               "logBase": 1,
-              "max": 100,
+              "max": null,
               "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1850,27 +2593,18 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": 1,
-          "editable": true,
-          "error": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "fill": 1,
-          "grid": {
-            "threshold1": 20,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": 50,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
-          },
-          "height": "",
-          "id": 27,
+          "height": "306",
+          "id": 46,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "avg",
             "sortDesc": true,
@@ -1878,7 +2612,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -1886,13 +2620,355 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.Memory, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Average Memory",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 0,
+          "fill": 1,
+          "height": "306",
+          "id": 47,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": false,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.Network, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Average Network",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "KBs",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 27,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.TotalKBps, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Average Throughput",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "kbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 26,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.TotalIOPS, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "TOP $TopResources VM Average IOPS",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {},
+          "height": "306",
+          "id": 29,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.ReadLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(216, 200, 27, 0.27)",
+              "op": "gt",
+              "value": 20
+            },
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(234, 112, 112, 0.22)",
+              "op": "gt",
+              "value": 50
             }
           ],
           "timeFrom": null,
@@ -1901,15 +2977,21 @@
           "tooltip": {
             "msResolution": false,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "ms",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1917,6 +2999,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1927,27 +3010,21 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": null,
-          "decimals": null,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
-          "grid": {
-            "threshold1": 20,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": 50,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
-          },
-          "height": "",
-          "id": 28,
+          "grid": {},
+          "height": "306",
+          "id": 30,
           "legend": {
             "alignAsTable": true,
             "avg": true,
             "current": true,
-            "max": true,
+            "max": false,
             "min": false,
-            "rightSide": false,
             "show": true,
             "sort": "avg",
             "sortDesc": true,
@@ -1955,7 +3032,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -1963,13 +3040,31 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "spaceLength": 10,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)"
+              "target": "aliasByNode(highestAverage(vmperf.$Group.$VM.WriteLatency, $TopResources), 2)",
+              "textEditor": true
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(216, 200, 27, 0.27)",
+              "op": "gt",
+              "value": 20
+            },
+            {
+              "colorMode": "custom",
+              "fill": true,
+              "fillColor": "rgba(234, 112, 112, 0.22)",
+              "op": "gt",
+              "value": 50
             }
           ],
           "timeFrom": null,
@@ -1978,16 +3073,21 @@
           "tooltip": {
             "msResolution": false,
             "shared": true,
+            "sort": 0,
             "value_type": "cumulative"
           },
-          "transparent": false,
           "type": "graph",
           "xaxis": {
-            "show": true
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
           },
           "yaxes": [
             {
               "format": "ms",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -1995,6 +3095,7 @@
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
               "max": null,
               "min": null,
@@ -2003,86 +3104,63 @@
           ]
         }
       ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
       "showTitle": true,
-      "title": "Virtual Machines by Average Values"
+      "title": "Virtual Machines by Average Values",
+      "titleSize": "h6"
     }
   ],
-  "time": {
-    "from": "now-1h",
-    "now": true,
-    "to": "now"
-  },
-  "timepicker": {
-    "collapse": false,
-    "enable": true,
-    "notice": false,
-    "now": true,
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ],
-    "status": "Stable",
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ],
-    "type": "timepicker"
-  },
+  "schemaVersion": 14,
+  "style": "dark",
+  "tags": [],
   "templating": {
-    "enable": true,
     "list": [
       {
-        "allFormat": "wildcard",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": null,
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "hide": 0,
         "includeAll": true,
+        "label": null,
+        "multi": false,
         "name": "Group",
+        "options": [],
         "query": "vmperf.*",
         "refresh": 1,
-        "refresh_on_load": false,
         "regex": "",
-        "type": "query"
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       },
       {
-        "allFormat": "wildcard",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": null,
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "hide": 0,
         "includeAll": true,
+        "label": null,
         "multi": true,
-        "multiFormat": "glob",
         "name": "VM",
+        "options": [],
         "query": "vmperf.$Group.*",
-        "refresh": 0,
-        "refresh_on_load": false,
+        "refresh": 1,
         "regex": "",
-        "type": "query"
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       },
       {
-        "allFormat": "glob",
+        "allValue": null,
         "current": {
+          "selected": true,
           "tags": [],
           "text": "5",
           "value": "5"
@@ -2090,6 +3168,8 @@
         "datasource": null,
         "hide": 0,
         "includeAll": false,
+        "label": "",
+        "multi": false,
         "name": "TopResources",
         "options": [
           {
@@ -2119,23 +3199,8 @@
           },
           {
             "selected": false,
-            "text": "6",
-            "value": "6"
-          },
-          {
-            "selected": false,
-            "text": "8",
-            "value": "8"
-          },
-          {
-            "selected": false,
             "text": "10",
             "value": "10"
-          },
-          {
-            "selected": false,
-            "text": "15",
-            "value": "15"
           },
           {
             "selected": false,
@@ -2144,8 +3209,8 @@
           },
           {
             "selected": false,
-            "text": "40",
-            "value": "40"
+            "text": "50",
+            "value": "50"
           },
           {
             "selected": false,
@@ -2153,30 +3218,42 @@
             "value": "*"
           }
         ],
-        "query": "1,2,3,4,5,6,8,10,15,20,40,*",
+        "query": "1,2,3,4,5,10,20,50,*",
         "refresh": 0,
-        "refresh_on_load": false,
         "type": "custom"
       }
     ]
   },
-  "annotations": {
-    "list": []
+  "time": {
+    "from": "now-1h",
+    "to": "now"
   },
-  "refresh": "5m",
-  "schemaVersion": 12,
-  "version": 4,
-  "links": [
-    {
-      "asDropdown": true,
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "VMPerf"
-      ],
-      "title": "VMPerf Dashboards",
-      "type": "dashboards"
-    }
-  ]
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "PSVMPerf",
+  "version": 19
 }
