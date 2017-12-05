@@ -37,11 +37,16 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/
 =================================================================
 
 Fork by PaulieShore
-Changelog (2017-Oct-26)
+Changelog 
+2017-Oct-26
 - Added param $IntervalSeconds for CPU Ready calculations.
 - Added cpu_ready function for CPU Ready Summation to CPU % Ready calculation.
 - Added metric cpu.ready.summation.
 - Added metric mem.usage.average.
+
+2017-Dec-05
+- Addded $finishtime to $Stat variable.
+- Updated CPU Ready % value to use different between $starttime and Get-Date ($differenceintime). This should increase the accuracy of the metric. 
 
 #>
 [CmdletBinding()]
