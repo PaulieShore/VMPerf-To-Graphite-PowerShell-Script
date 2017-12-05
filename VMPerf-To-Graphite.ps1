@@ -370,6 +370,10 @@ if ($FromLastPoll -ne "") {
 	}
 }
 
+#Added by PaulShore
+$finishtime = Get-Date
+$differenceintime = (New-TimeSpan -Start $starttime -End $finishtime).TotalSeconds
+
 :crawlerloop while(($iteration -le $iterations) -OR ($iterations -eq 0)) {
 
 	$msg = "Receiving list of VMs from vCenter server $server"
@@ -417,7 +421,7 @@ if ($FromLastPoll -ne "") {
             $i = $i + 1
             Write-Progress -Activity "Receiving metrics..." -CurrentOperation "Virtual Machine ($i/$vcount): $($vmc.Name)" -Id 666 -PercentComplete ($i / $vcount * 100)
 
-	        $stat = Get-Stat -Entity $vmc -Stat $metrics -Realtime -Start $starttime -ErrorAction SilentlyContinue -Verbose:$false |
+	        $stat = Get-Stat -Entity $vmc -Stat $metrics -Realtime -Start $starttime -Finish $finishtime -ErrorAction SilentlyContinue -Verbose:$false |
                 Group-Object -Property {$_.Entity.Name+$_.Timestamp}  | %{
 	        	    New-Object PSObject -Property @{
 	        	    VM = $_.Group[0].Entity.Name
@@ -479,7 +483,7 @@ if ($FromLastPoll -ne "") {
 	    	    $totaliops = $stat.ReadIOPS + $stat.WriteIOPS
 	    	    $totalkbps = $stat.ReadKBps + $stat.WriteKBps
 				
-				$cpuready = cpu_ready $stat.CPUReadySummation 20
+				$cpuready = cpu_ready $stat.CPUReadySummation $differenceintime
 	    
 	    	    $result = $prefix + $vm + ".ReadIOPS " + [int]$stat.ReadIOPS + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
