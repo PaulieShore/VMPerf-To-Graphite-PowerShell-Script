@@ -375,10 +375,6 @@ if ($FromLastPoll -ne "") {
 	}
 }
 
-#Added by PaulShore
-$finishtime = Get-Date
-$differenceintime = (New-TimeSpan -Start $starttime -End $finishtime).TotalSeconds
-
 :crawlerloop while(($iteration -le $iterations) -OR ($iterations -eq 0)) {
 
 	$msg = "Receiving list of VMs from vCenter server $server"
@@ -488,7 +484,7 @@ $differenceintime = (New-TimeSpan -Start $starttime -End $finishtime).TotalSecon
 	    	    $totaliops = $stat.ReadIOPS + $stat.WriteIOPS
 	    	    $totalkbps = $stat.ReadKBps + $stat.WriteKBps
 				
-				$cpuready = cpu_ready $stat.CPUReadySummation $differenceintime
+				$cpuready = cpu_ready $stat.CPUReadySummation 20
 	    
 	    	    $result = $prefix + $vm + ".ReadIOPS " + [int]$stat.ReadIOPS + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
