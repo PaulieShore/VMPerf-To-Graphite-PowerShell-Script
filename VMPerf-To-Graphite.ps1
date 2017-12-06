@@ -426,7 +426,7 @@ $differenceintime = (New-TimeSpan -Start $starttime -End $finishtime).TotalSecon
             $i = $i + 1
             Write-Progress -Activity "Receiving metrics..." -CurrentOperation "Virtual Machine ($i/$vcount): $($vmc.Name)" -Id 666 -PercentComplete ($i / $vcount * 100)
 
-	        $stat = Get-Stat -Entity $vmc -Stat $metrics -Realtime -Start $starttime -Finish $finishtime -ErrorAction SilentlyContinue -Verbose:$false |
+	        $stat = Get-Stat -Entity $vmc -Stat $metrics -Realtime -Start $starttime -ErrorAction SilentlyContinue -Verbose:$false |
                 Group-Object -Property {$_.Entity.Name+$_.Timestamp}  | %{
 	        	    New-Object PSObject -Property @{
 	        	    VM = $_.Group[0].Entity.Name
