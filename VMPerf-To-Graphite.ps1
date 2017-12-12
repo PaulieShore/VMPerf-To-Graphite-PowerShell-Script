@@ -270,8 +270,8 @@ function weighted_average($acount,$avalues) {
 # -------------------------------------------------------------------------------------
 # Calculate the CPU % Ready
 # -------------------------------------------------------------------------------------
-function cpu_ready($cpuready,$intsec) {
-    $cpureadycalculated = (($cpuready / ($intsec * 1000)) * 100)
+function cpu_ready($cpuready,$intsec,$vcpucount) {
+    $cpureadycalculated = (($cpuready / ($intsec * 1000)) * 100) / $vcpucount
     return($cpureadycalculated)
 }
 
@@ -418,6 +418,9 @@ if ($FromLastPoll -ne "") {
         $i = 0;
         [System.Collections.ArrayList]$stats = @()
         foreach ($vmc in $vms) {
+		
+			#Added by PaulieShore
+			$vcpu = (Get-VM -Name $vmc).NumCpu
 
             $i = $i + 1
             Write-Progress -Activity "Receiving metrics..." -CurrentOperation "Virtual Machine ($i/$vcount): $($vmc.Name)" -Id 666 -PercentComplete ($i / $vcount * 100)
@@ -449,11 +452,13 @@ if ($FromLastPoll -ne "") {
 	        	    	Measure-Object -Property Value -Average |
 	        	    	select -ExpandProperty Average
 					CPUReadySummation = $_.Group | where {$_.MetricId -eq "cpu.ready.summation"} |
+						where {$_.Instance -eq ""} |
 	        	    	Measure-Object -Property Value -Average |
 	        	    	select -ExpandProperty Average
 	        	    Network = $_.Group | where {$_.MetricId -eq "net.usage.average"} |
 	        	    	Measure-Object -Property Value -Average |
 	        	    	select -ExpandProperty Average
+					vcpu = $vcpu
 	        	    }
 	            }
 
@@ -484,7 +489,7 @@ if ($FromLastPoll -ne "") {
 	    	    $totaliops = $stat.ReadIOPS + $stat.WriteIOPS
 	    	    $totalkbps = $stat.ReadKBps + $stat.WriteKBps
 				
-				$cpuready = cpu_ready $stat.CPUReadySummation 20
+				$cpuready = cpu_ready $stat.CPUReadySummation 20 $stat.vcpu
 	    
 	    	    $result = $prefix + $vm + ".ReadIOPS " + [int]$stat.ReadIOPS + " " + (get-date(($stat.Timestamp).touniversaltime()) -uformat "%s")
 	    	    $results.add($results.count, $result)
